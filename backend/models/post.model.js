@@ -9,6 +9,7 @@ const postSchema = new mongoose.Schema(
     },
     content: { type: String },
     image: { type: String },
+    // After created
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [
       {
