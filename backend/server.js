@@ -9,9 +9,9 @@ dotenv.config();
 // Middle ware = Middle + Software
 
 const app = express();
-// parse JSON request body
+// parse JSON request body - JSOn으로 파싱 할 수 있게해줌
 app.use(express.json());
-// to check the cookie
+// to check the cookie - 쿠키를 파싱 할 수 있게해줌
 app.use(cookieParser());
 // Version Control
 app.use("/api/v1/auth", authRoutes);

@@ -1,3 +1,8 @@
+/*
+
+  SOC 항상 나눠주기 - Route Setting
+
+*/
 import express from "express";
 import {
   signUp,

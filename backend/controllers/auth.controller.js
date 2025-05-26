@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+// defensive Programming
 export const signUp = async (req, res) => {
   try {
     const { name, username, email, password } = req.body;
@@ -26,7 +27,7 @@ export const signUp = async (req, res) => {
         .json({ message: "Password must be at least  6 characters" });
     }
     // Hash the password before storing in DataBase
-    const salt = bcrypt.getSalt(10);
+    const salt = await bcrypt.genSalt(10);
     // 123 -> aofkeoakfok
     const hashedPassword = await bcrypt.hash(password, salt);
     // Create new Object
@@ -40,10 +41,12 @@ export const signUp = async (req, res) => {
     await user.save();
     // Create new token
 
-    // Is it availabile in Flutter?
+    // 봉인되어있는 토큰...
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "3d",
     });
+
+    // 쿠키통 셋팅
     res.cookie("jwt-linkedin", token, {
       httpOnly: true, // prevent XSS attack
       maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -74,10 +77,13 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    // Create new token
+
+    // 사용자의 정보를 담은 토큰 - 암호화되어있음
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "3d",
     });
+
+    // 쿠키통에 담아주기
     res.cookie("jwt-linkedin", token, {
       httpOnly: true, // prevent XSS attack
       maxAge: 3 * 24 * 60 * 60 * 1000,
@@ -95,11 +101,13 @@ export const login = async (req, res) => {
   }
 };
 
-// Q - Clear Cookie?
+// stateless authentication 
+// 토큰 자체를 지워줌
 export const logout = (req, res) => {
   res.clearCookie("jwt-linkedin");
   res.json({ message: "Logged out successfully" });
 };
+
 
 export const getCurrentUser = (req, res) => {
   try {
