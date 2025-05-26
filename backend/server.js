@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 // Clean Code
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
+import postsRoute from "./routes/post.route.js";
 dotenv.config();
 
 // SINGLE TON
@@ -20,6 +21,7 @@ app.use(cookieParser());
 // Version Control
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/posts", postsRoute);
 
 const PORT = process.env.PORT || 5000;
 
