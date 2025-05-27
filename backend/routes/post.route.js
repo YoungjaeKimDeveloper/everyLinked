@@ -1,12 +1,20 @@
 import express, { Router } from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
-import { getFeedPosts, createPost } from "../controllers/post.controller.js";
+import {
+  getFeedPosts,
+  createPost,
+  deletePost,
+  getPostById,
+  createComment,
+} from "../controllers/post.controller.js";
 const router = express.Router();
 
 // ProtectRoute -> Only Authenticated user
-// fetch all posts
+
 router.get("/", protectRoute, getFeedPosts);
-// Cretae new post
 router.post("/create", protectRoute, createPost);
+router.delete("/delete/:id", protectRoute, deletePost);
+router.get("/:id", protectRoute, getPostById);
+router.post("/:id/comment", protectRoute, createComment);
 
 export default router;
