@@ -1,11 +1,23 @@
-import React from 'react'
+
+import Layout from './components/layout/Layout'
+import { Routes, Route } from "react-router-dom"
+
+// Pages
+import HomePage from "./pages/HomePage"
+import LoginPage from "./pages/auth/LoginPage"
+import SignUpPage from "./pages/auth/SignUpPage"
 
 const App = () => {
   return (
-    <div>
-      <p className='bg-red-50' >Helo</p>
-      <p className='btn'>Click me</p>
-    </div>
+    // SET THE HOMEPAGE ROUTE
+    <Layout>
+      <Routes>
+        {/* AUTH */}
+        <Route path='/' element={<HomePage />} />
+        <Route path='/signup' element={<SignUpPage />} />
+        <Route path='/login' element={<LoginPage />} />
+      </Routes>
+    </Layout>
   )
 }
 
