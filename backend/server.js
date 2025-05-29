@@ -33,13 +33,17 @@ app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 
 // Version Control
+app.get("/", (req, res) => {
+  return res.status(200).json({ message: "Hello" });
+});
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/posts", postsRoute);
 app.use("/api/v1/notifications", notificationRoute);
 app.use("/api/v1/connections", connectionRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`SERVER IS RUNNING ${PORT}`);

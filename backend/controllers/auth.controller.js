@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 // defensive Programming
 export const signUp = async (req, res) => {
+  console.log("요청받음")
   try {
     const { name, username, email, password } = req.body;
     if (!name || !username || !email || !password) {

@@ -1,4 +1,5 @@
 import logo from "../../../public/logo.svg"
+import SignUpForm from "../../components/auth/SignUpForm"
 import { Link } from "react-router-dom"
 const SignUpPage = () => {
     return (
