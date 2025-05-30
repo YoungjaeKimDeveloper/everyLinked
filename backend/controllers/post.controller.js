@@ -6,7 +6,8 @@ import { compareSync } from "bcryptjs";
 export const getFeedPosts = async (req, res) => {
   try {
     const posts = await Post.find({
-      author: { $in: req.user.connections },
+      // Spread operator..
+      author: { $in: [req.user._id, , ...req.user.connections] },
     })
       .populate("author", "name username profilePicture headline")
       .populate("comments.user", "name profilePicture")
@@ -19,8 +20,11 @@ export const getFeedPosts = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
+  const { content, image } = req.body;
+
   try {
     const { content, image } = req.body;
+
     // 이미지가 있는경우
     let newPost;
     if (image) {
@@ -39,7 +43,7 @@ export const createPost = async (req, res) => {
     await newPost.save();
     return res.status(201).json(newPost);
   } catch (error) {
-    console.error("Error in createPost controller: ", error);
+    console.error("Error in createPost controller: ", error.message);
     return res.status(500).json({ message: "Server Error" });
   }
 };
