@@ -13,12 +13,13 @@
 
 */
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { axiosInstance } from "../../lib/axios.js"
 import { toast } from "react-hot-toast"
 import { Loader } from "lucide-react"
 
 const SignUpForm = () => {
+    const queryClient = useQueryClient();
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
@@ -31,6 +32,7 @@ const SignUpForm = () => {
             return res.data
         },
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["authUser"] })
             toast.success("Account created successfully");
         },
         onError: (error) => {

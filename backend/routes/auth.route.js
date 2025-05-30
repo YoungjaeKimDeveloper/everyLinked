@@ -16,6 +16,8 @@ const router = express.Router();
 
 // Auth Routes
 // Signup,Login,Logout
+// POST - 서버의 상태를 바꿀때 사용됨
+// GET보다 안전
 router.post("/signup", signUp);
 router.post("/login", login);
 router.post("/logout", logout);

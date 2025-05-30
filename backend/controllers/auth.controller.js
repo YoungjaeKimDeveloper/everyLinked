@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 // defensive Programming
 export const signUp = async (req, res) => {
-  console.log("요청받음")
+  console.log("요청받음");
   try {
     const { name, username, email, password } = req.body;
     if (!name || !username || !email || !password) {
@@ -64,19 +64,20 @@ export const signUp = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  console.log("Login 요청받음");
   try {
     const { username, password } = req.body;
-
     //  check if user exists - username
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.debug("유저 아이디가맞지않음")
+      return res.status(400).json({ message: "유저 아이디가맞지않음" });
     }
     // Check password
     // Matching typed Password and stored database
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "비밀번호가 맞지않아요" });
     }
 
     // 사용자의 정보를 담은 토큰 - 암호화되어있음
@@ -95,20 +96,19 @@ export const login = async (req, res) => {
       .send(200)
       .json({ success: true, message: "Logged in successfully" });
   } catch (error) {
-    console.log(`Error in login ${error.message}`);
+    console.log(`Error in login ${error}`);
     return res
       .status(500)
       .json({ success: false, message: "Internal Error in login" });
   }
 };
 
-// stateless authentication 
+// stateless authentication
 // 토큰 자체를 지워줌
 export const logout = (req, res) => {
   res.clearCookie("jwt-linkedin");
   res.json({ message: "Logged out successfully" });
 };
-
 
 export const getCurrentUser = (req, res) => {
   try {

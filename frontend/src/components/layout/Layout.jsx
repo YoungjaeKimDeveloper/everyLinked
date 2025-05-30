@@ -5,7 +5,8 @@ import { useQuery } from "@tanstack/react-query"
 const Layout = ({ children }) => {
   // 전역적으로 사용할 수 있게됨
   // Global state - BLOC처럼 됨..
-  const { data: authUser, isLoading } = useQuery({ queryKey: ["authUser"] })
+  // Q - 나중에 고칠것 
+  const { data: authUser, isLoading } = useQuery({ queryKey: ["authUser"], enabled: false })
   // BUILD UI
   return (
     <div className='min-h-screen bg-base-100'>
