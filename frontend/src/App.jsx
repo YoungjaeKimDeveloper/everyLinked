@@ -1,22 +1,55 @@
 
 import Layout from './components/layout/Layout'
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 
 // Pages
 import HomePage from "./pages/HomePage"
 import LoginPage from "./pages/auth/LoginPage"
 import SignUpPage from "./pages/auth/SignUpPage"
-import { Toaster } from 'react-hot-toast'
 
+import { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
+import { useQuery } from '@tanstack/react-query'
+import { axiosInstance } from './lib/axios'
 const App = () => {
+  // Fetch Auth user
+
+  // Global Query Pattern 
+  
+  // Check the Authentication - Everytime Component - rendering
+  const { data: authUser, isLoading } = useQuery({
+    queryKey: ["authUser"],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get("/auth/me");
+        return res.data
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          return null;
+        }
+        toast.error(error.response.data.message || "Something went wrong")
+      }
+    }
+  })
+
+  console.log("authUser", authUser)
+
+
+  // ACCESS CONTROL 
+  // 하나의 URL이 하나의 PAGE(책임) 을 갖게한다.
+  // ROLE OF URL
+  // Loading State
+  if (isLoading) return null
+  // BUILD UI
   return (
-    // SET THE HOMEPAGE ROUTE
+    // 하나의 URL이 하나의 PAGE(책임) 을 갖게한다.
+    // ROLE OF URL
     <Layout>
       <Routes>
         {/* AUTH */}
-        <Route path='/' element={<HomePage />} />
-        <Route path='/signup' element={<SignUpPage />} />
-        <Route path='/login' element={<LoginPage />} />
+        <Route path='/' element={authUser ? <HomePage /> : <LoginPage />} />
+        <Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />} />
+        <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to={"/"} />} />
       </Routes>
       <Toaster />
     </Layout>
