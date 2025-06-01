@@ -70,7 +70,7 @@ export const login = async (req, res) => {
     //  check if user exists - username
     const user = await User.findOne({ username });
     if (!user) {
-      console.debug("유저 아이디가맞지않음")
+      console.debug("유저 아이디가맞지않음");
       return res.status(400).json({ message: "유저 아이디가맞지않음" });
     }
     // Check password
@@ -93,7 +93,7 @@ export const login = async (req, res) => {
       secure: process.env.NODE_ENV === "production", //prevents man-in-the-middle attacks
     });
     return res
-      .send(200)
+      .status(200)
       .json({ success: true, message: "Logged in successfully" });
   } catch (error) {
     console.log(`Error in login ${error}`);

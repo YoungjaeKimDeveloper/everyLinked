@@ -61,18 +61,19 @@ const HomePage = () => {
                         <p className='text-gray-600 mb-6'>Connect with others to start seeing posts in your feed!</p>
                     </div>
                 )}
-                {/* Recommended users */}
-                {recommendedUsers?.length > 0 && (
-                    <div className='col-span-1 lg:col-span-1 hidden lg:block'>
-                        <div className='bg-secondary rounded-lg shadow p-4'>
-                            <h2 className='font-semibold mb-4'>People you may know</h2>
-                            {recommendedUsers?.map((user) => (
-                                <RecommendedUser key={user._id} user={user} />
-                            ))}
-                        </div>
-                    </div>
-                )}
+
             </div>
+            {/* Recommended users */}
+            {recommendedUsers?.length > 0 && (
+                <div className='col-span-1 lg:col-span-1 hidden lg:block'>
+                    <div className='bg-secondary rounded-lg shadow p-4'>
+                        <h2 className='font-semibold mb-4'>People you may know</h2>
+                        {recommendedUsers?.map((user) => (
+                            <RecommendedUser key={user._id} user={user} />
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

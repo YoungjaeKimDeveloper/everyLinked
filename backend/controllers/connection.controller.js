@@ -26,7 +26,7 @@ export const sendConnectionRequest = async (req, res) => {
     }
 
     // Request is existed
-    const existingRequest = await ConnectionRequest({
+    const existingRequest = await ConnectionRequest.findOne({
       senderId: senderId,
       recipient: userId,
       status: "pending",
@@ -70,7 +70,7 @@ export const acceptConnectionRequest = async (req, res) => {
       return res.status(404).json({ message: "Connection request not found" });
     }
     // 권한 확인하기
-    if ((request, recipient._id.toString() !== userId.toString())) {
+    if (request.recipient._id.toString() !== userId.toString()) {
       return res
         .status(403)
         .json({ message: "NOT AUTHORIZED TO ACCPET THIS REQUEST" });
@@ -222,7 +222,7 @@ export const getConnectionStatus = async (req, res) => {
       }
     }
     // if no connection or pending req found
-    return res.json({ status: "not connected" });
+    return res.json({ status: "not_connected" });
   } catch (error) {
     console.error("Error in getConnectionStatus", error.message);
     return res
