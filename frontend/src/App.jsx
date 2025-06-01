@@ -6,7 +6,8 @@ import { Routes, Route, Navigate } from "react-router-dom"
 import HomePage from "./pages/HomePage"
 import LoginPage from "./pages/auth/LoginPage"
 import SignUpPage from "./pages/auth/SignUpPage"
-
+import NotificationPage from './components/home/NotificationPage'
+// External library
 import { Toaster } from 'react-hot-toast'
 import toast from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
@@ -15,7 +16,7 @@ const App = () => {
   // Fetch Auth user
 
   // Global Query Pattern 
-  
+
   // Check the Authentication - Everytime Component - rendering
   const { data: authUser, isLoading } = useQuery({
     queryKey: ["authUser"],
@@ -43,13 +44,14 @@ const App = () => {
   // BUILD UI
   return (
     // 하나의 URL이 하나의 PAGE(책임) 을 갖게한다.
-    // ROLE OF URL
+    // ROLE OF URL - Navigate로 쓸것 - 논리적
     <Layout>
       <Routes>
         {/* AUTH */}
         <Route path='/' element={authUser ? <HomePage /> : <LoginPage />} />
         <Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />} />
         <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to={"/"} />} />
+        <Route path='/notifications' element={authUser ? <NotificationPage /> : <Navigate to={"/login"} />} />
       </Routes>
       <Toaster />
     </Layout>
