@@ -5,8 +5,11 @@ import { axiosInstance } from "../../lib/axios.js"
 import toast from "react-hot-toast"
 import { Link } from "react-router-dom"
 import { Loader, MessageCircle, Send, Share2, ThumbsUp, Trash2 } from "lucide-react";
+import { formatDistanceToNow } from "date-fns"
+import PostAction from "./PostAction.jsx"
 const Post = ({ post }) => {
     const { data: authUser } = useQuery({ queryKey: ["authUser"] })
+    const [comments, setComments] = useState(post.comments || [])
     const [showComments, setShowComments] = useState(false)
     const [newComment, setNewComment] = useState("")
     const isOwner = authUser?._id === post?.author?._id
@@ -14,6 +17,21 @@ const Post = ({ post }) => {
 
     const queryClient = useQueryClient()
     // functionality
+    // const { data: comments } = useQuery({
+    //     queryKey: ["comments"],
+    //     queryFn: async () => {
+    //         try {
+    //             console.log("Comments", comments);
+    //             const res = await axiosInstance.get("notifications")
+    //             return res.data
+    //         } catch (error) {
+    //             console.error("error in fetching comments", error)
+    //             toast.error("ERROR IN FETCHING NOTIFICATIONS")
+    //         }
+    //     }
+    // })
+
+
     const { mutate: deletePost, isPending: isDeletingPost } = useMutation({
         mutationFn: async () => {
             await axiosInstance.delete(`/posts/delete/${post._id}`);
@@ -53,6 +71,31 @@ const Post = ({ post }) => {
             queryClient.invalidateQueries({ queryKey: ["post", post._id] });
         },
     });
+
+    const handleLikePost = () => {
+        // Stop sending the request 
+        if (isLikingPost) return;
+        likePost()
+    };
+    const handleAddComment = (e) => {
+        e.preventDefault()
+        if (newComment.trim()) {
+            createComment(newComment)
+            setNewComment("")
+            setComments([
+                ...comments,
+                {
+                    content: newComment,
+                    user: {
+                        _id: authUser._id,
+                        name: authUser.name,
+                        profilePicture: authUser.profilePicture
+                    },
+                    createdAt: new Date
+                }
+            ])
+        }
+    }
     // BUILD UI
     return (
         <div className='bg-green-50 rounded-lg shadow mb-4'>
@@ -73,7 +116,7 @@ const Post = ({ post }) => {
                             </Link>
                             <p className='text-xs text-info'>{post.author.headline}</p>
                             <p className='text-xs text-info'>
-                                {/* {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })} */}
+                                {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
                             </p>
                         </div>
                     </div>
@@ -86,22 +129,22 @@ const Post = ({ post }) => {
                 <p className='mb-4'>{post.content}</p>
                 {post.image && <img src={post.image} alt='Post content' className='rounded-lg w-full mb-4' />}
 
-                {/* <div className='flex justify-between text-info'>
+                <div className='flex justify-between text-info'>
                     <PostAction
                         icon={<ThumbsUp size={18} className={isLiked ? "text-blue-500  fill-blue-300" : ""} />}
-                        text={`Like (${post.likes.length})`}
+                        text={`Like (${post?.likes?.length})`}
                         onClick={handleLikePost}
                     />
 
                     <PostAction
                         icon={<MessageCircle size={18} />}
-                        text={`Comment (${comments.length})`}
+                        text={`Comment (${comments?.length})`}
                         onClick={() => setShowComments(!showComments)}
                     />
                     <PostAction icon={<Share2 size={18} />} text='Share' />
-                </div> */}
+                </div>
             </div>
-            {/* 
+            {/* SHOW THE COMMENT */}
             {showComments && (
                 <div className='px-4 pb-4'>
                     <div className='mb-4 max-h-60 overflow-y-auto'>
@@ -124,7 +167,7 @@ const Post = ({ post }) => {
                             </div>
                         ))}
                     </div>
-
+                    {/* Comment Form */}
                     <form onSubmit={handleAddComment} className='flex items-center'>
                         <input
                             type='text'
@@ -143,7 +186,7 @@ const Post = ({ post }) => {
                         </button>
                     </form>
                 </div>
-            )} */}
+            )}
         </div>
     );
 }
