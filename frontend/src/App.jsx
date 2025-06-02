@@ -8,6 +8,7 @@ import LoginPage from "./pages/auth/LoginPage"
 import SignUpPage from "./pages/auth/SignUpPage"
 import NotificationPage from './components/home/NotificationPage'
 import NetworkPage from './components/home/NetworkPage'
+import PostPage from './components/home/PostPage'
 // External library
 import { Toaster } from 'react-hot-toast'
 import toast from 'react-hot-toast'
@@ -54,6 +55,7 @@ const App = () => {
         <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to={"/"} />} />
         <Route path='/notifications' element={authUser ? <NotificationPage /> : <Navigate to={"/login"} />} />
         <Route path='/network' element={authUser ? <NetworkPage /> : <Navigate to={"/login"} />} />
+        <Route path='/post/:postId' element={authUser ? <PostPage /> : <Navigate to={"/login"} />} />
       </Routes>
       <Toaster />
     </Layout>
